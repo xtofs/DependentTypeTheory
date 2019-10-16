@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 
-namespace console
+namespace xtofs.dtt
 {
 
     // http://math.andrej.com/2012/11/08/how-to-implement-dependent-type-theory-i/

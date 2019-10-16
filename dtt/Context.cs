@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace console
+namespace xtofs.dtt
 {
     public static class Context
     {

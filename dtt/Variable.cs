@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace console
+namespace xtofs.dtt
 {
     public interface IVariable : IEquatable<IVariable>
     {
@@ -57,17 +57,17 @@ namespace console
 
         public override int GetHashCode() => Name.GetHashCode();
 
-        public override bool Equals([AllowNull] object other)
+        public override bool Equals(object other)
         {
             return other is StringVariable s && Equals(s);
         }
 
-        public bool Equals([AllowNull] IVariable other)
+        public bool Equals(IVariable other)
         {
             return other is StringVariable s && Equals(s);
         }
 
-        public bool Equals([AllowNull] StringVariable other)
+        public bool Equals(StringVariable other)
         {
             return other.Name.Equals(Name);
         }
@@ -95,17 +95,17 @@ namespace console
         #region equality
         public override int GetHashCode() => Id.GetHashCode();
 
-        public override bool Equals([AllowNull] object other)
+        public override bool Equals(object other)
         {
             return other is GenSymVariable s && Equals(s);
         }
 
-        public bool Equals([AllowNull] IVariable other)
+        public bool Equals(IVariable other)
         {
             return other is GenSymVariable s && Equals(s);
         }
 
-        public bool Equals([AllowNull] GenSymVariable other)
+        public bool Equals(GenSymVariable other)
         {
             return other.Id == this.Id && other.Name.Equals(Name);
         }
@@ -123,17 +123,17 @@ namespace console
 
         public override int GetHashCode() => 1.GetHashCode();
 
-        public override bool Equals([AllowNull] object other)
+        public override bool Equals(object other)
         {
             return false;
         }
 
-        public bool Equals([AllowNull] IVariable other)
+        public bool Equals(IVariable other)
         {
             return false;
         }
 
-        public bool Equals([AllowNull] DummyVariable other)
+        public bool Equals(DummyVariable other)
         {
             return false;
         }
