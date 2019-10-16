@@ -26,21 +26,27 @@ namespace xtofs.dtt
     // If x does not appear freely in B, then we write A -> B instead of forall x : A, B.
     public interface IExpression
     {
-
     }
+
     public static class Expression
     {
         public static VariableExpression Var(string name) => new VariableExpression(Variable.Var(name));
+
         public static VariableExpression Var(IVariable variable) => new VariableExpression(variable);
+
         public static VariableExpression Refresh(this VariableExpression variable) => Var(variable.Variable.Refresh());
 
         public static UniverseExpression Universe(int n) => new UniverseExpression(n);
+
         public static PiExpression Pi(IVariable v, IExpression a, IExpression b) => new PiExpression(v, a, b);
+
+        public static PiExpression Pi(IExpression a, IExpression b) => new PiExpression(Variable.Dummy, a, b);
+
         public static LambdaExpression Lambda(IVariable v, IExpression a, IExpression b) => new LambdaExpression(v, a, b);
 
         public static AppExpression App(IExpression a, IExpression b) => new AppExpression(a, b);
 
-        public static bool ContainsFree(this IExpression expression, IVariable v)
+        public static bool IsFreeVariable(this IExpression expression, IVariable v)
         {
             switch (expression)
             {
@@ -54,15 +60,15 @@ namespace xtofs.dtt
                     }
                 case PiExpression(var x, var t1, var t2):
                     {
-                        return t1.ContainsFree(v) || (!x.Equals(v) && t2.ContainsFree(v));
+                        return t1.IsFreeVariable(v) || (!x.Equals(v) && t2.IsFreeVariable(v));
                     }
                 case LambdaExpression(var x, var t, var e):
                     {
-                        return t.ContainsFree(v) || (!x.Equals(v) && e.ContainsFree(v));
+                        return t.IsFreeVariable(v) || (!x.Equals(v) && e.IsFreeVariable(v));
                     }
                 case AppExpression(var e1, var e2):
                     {
-                        return e1.ContainsFree(v) || e2.ContainsFree(v);
+                        return e1.IsFreeVariable(v) || e2.IsFreeVariable(v);
                     }
                 default:
                     throw new NotSupportedException();
@@ -129,7 +135,7 @@ namespace xtofs.dtt
         public IExpression T { get; }
         public IExpression E { get; }
 
-        public override string ToString() => E.ContainsFree(V) ? $"forall {V} : {T}, {E}" : $"({T} -> {E})";
+        public override string ToString() => E.IsFreeVariable(V) ? $"forall {V} : {T}, {E}" : $"({T} -> {E})";
     }
 
     public class LambdaExpression : IExpression

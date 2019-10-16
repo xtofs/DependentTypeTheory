@@ -12,7 +12,7 @@ namespace xtofs.dtt
     {
         public static IVariable Var(string name) => new StringVariable(name);
 
-        public static IVariable Dummy = DummyVariable.Instance;
+        internal static IVariable Dummy = DummyVariable.Instance;
 
         private static int id;
 
@@ -120,8 +120,9 @@ namespace xtofs.dtt
         public override string ToString() => "_";
 
         #region equality
+        // two dummy variables are never the same. 
 
-        public override int GetHashCode() => 1.GetHashCode();
+        public override int GetHashCode() => base.GetHashCode();
 
         public override bool Equals(object other)
         {

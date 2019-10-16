@@ -10,14 +10,13 @@ namespace console
         {
             var repl = new REPL();
 
-
             repl.Declare("N", Expression.Universe(0));
             repl.Declare("z", Expression.Var("N"));
             repl.Declare("s", Expression.Pi(Variable.Var("p"), Expression.Var("N"), Expression.Var("N")));
             repl.ShowContext();
 
             var N = Expression.Var("N");
-            var N2N = Expression.Pi(Variable.Dummy, N, N);
+            var N2N = Expression.Pi(N, N);
 
             repl.Define(Variable.Var("triple"),
                 Expression.Lambda(Variable.Var("f"), N2N,

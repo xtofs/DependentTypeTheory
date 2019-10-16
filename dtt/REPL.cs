@@ -12,7 +12,7 @@ namespace xtofs.dtt
 
         public void Declare(string variable, IExpression expression)
         {
-            Console.WriteLine("# Declared {0}: {1}", variable, expression.ToString());
+            Console.WriteLine("# Declare {0}: {1}", variable, expression.ToString());
             ctx = ctx.Extend(Variable.Var(variable), expression);
         }
 
@@ -20,7 +20,7 @@ namespace xtofs.dtt
         {
             var te = ctx.InferType(expression);
             ctx = ctx.Extend(variable, ctx.InferType(expression), expression);
-            Console.WriteLine("# Defined {0} := {1}\n\t{0}: {2}", variable, expression.ToString(), te.ToString());
+            Console.WriteLine("# Define {0} := {1}\n\t{0}: {2}", variable, expression.ToString(), te.ToString());
         }
 
         public void ShowContext()
@@ -35,7 +35,7 @@ namespace xtofs.dtt
 
         public void Check(IExpression expression)
         {
-            Console.WriteLine("# {0}: {1}", expression, ctx.InferType(expression));
+            Console.WriteLine("# Check {0}:\n\t{1}", expression, ctx.InferType(expression));
         }
     }
 }
