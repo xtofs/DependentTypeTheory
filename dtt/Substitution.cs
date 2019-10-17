@@ -6,14 +6,14 @@ namespace xtofs.dtt
     public static class Substitution
     {
 
-        public static ImmutableDictionary<IVariable, IExpression> Empty =
-            ImmutableDictionary<IVariable, IExpression>.Empty;
+        public static ImmutableDictionary<IVariable, Expression> Empty =
+            ImmutableDictionary<IVariable, Expression>.Empty;
 
-        public static ImmutableDictionary<IVariable, IExpression> Single(IVariable variable, IExpression value) =>
+        public static ImmutableDictionary<IVariable, Expression> Single(IVariable variable, Expression value) =>
             Empty.Add(variable, value);
 
-        public static IImmutableDictionary<IVariable, IExpression> SetOrAdd(this IImmutableDictionary<IVariable, IExpression> subst,
-        IVariable variable, IExpression expression)
+        public static IImmutableDictionary<IVariable, Expression> SetOrAdd(this IImmutableDictionary<IVariable, Expression> subst,
+        IVariable variable, Expression expression)
         {
             return subst.SetItem(variable, expression);
         }
@@ -32,7 +32,7 @@ namespace xtofs.dtt
         ///   let x' = refresh x in
         ///     (x', subst s t, subst ((x, Var x') :: s) e)
         /// </summary>
-        public static IExpression Apply(this IImmutableDictionary<IVariable, IExpression> subst, IExpression expression)
+        public static Expression Apply(this IImmutableDictionary<IVariable, Expression> subst, Expression expression)
         {
             switch (expression)
             {

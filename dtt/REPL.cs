@@ -7,19 +7,19 @@ namespace xtofs.dtt
     public class REPL
     {
 
-        private IImmutableDictionary<IVariable, (IExpression type, IExpression value)> ctx = Context.Empty;
+        private IImmutableDictionary<IVariable, (Expression type, Expression value)> ctx = Context.Empty;
 
 
-        public void Declare(string variable, IExpression expression)
+        public void Declare(string variable, Expression expression)
         {
             Console.WriteLine("# Declare {0}: {1}", variable, expression.ToString());
             ctx = ctx.Extend(Variable.Var(variable), expression);
         }
 
-        public void Define(IVariable variable, IExpression expression)
+        public void Define(IVariable variable, Expression expression)
         {
             var te = ctx.InferType(expression);
-            ctx = ctx.Extend(variable, ctx.InferType(expression), expression);
+            ctx = ctx.Extend(variable, te, expression);
             Console.WriteLine("# Define {0} := {1}\n\t{0}: {2}", variable, expression.ToString(), te.ToString());
         }
 
@@ -28,12 +28,12 @@ namespace xtofs.dtt
             Console.WriteLine("# Context: \n\t{0}", ctx.Format("\n\t"));
         }
 
-        public void Eval(IExpression expression)
+        public void Eval(Expression expression)
         {
             Console.WriteLine("# Eval {0}\n\t{1}", expression, ctx.Eval(expression));
         }
 
-        public void Check(IExpression expression)
+        public void Check(Expression expression)
         {
             Console.WriteLine("# Check {0}:\n\t{1}", expression, ctx.InferType(expression));
         }

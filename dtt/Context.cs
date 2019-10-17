@@ -7,13 +7,13 @@ namespace xtofs.dtt
 {
     public static class Context
     {
-        public static IImmutableDictionary<IVariable, (IExpression type, IExpression value)> Empty =
-                  ImmutableDictionary<IVariable, (IExpression type, IExpression value)>.Empty;
+        public static IImmutableDictionary<IVariable, (Expression type, Expression value)> Empty =
+                  ImmutableDictionary<IVariable, (Expression type, Expression value)>.Empty;
 
         public static bool TryGetType(
-            this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
+            this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
             IVariable variable,
-            out IExpression type)
+            out Expression type)
         {
             if (context.TryGetValue(variable, out var pair))
             {
@@ -28,9 +28,9 @@ namespace xtofs.dtt
         }
 
         public static bool TryGetVal(
-            this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
+            this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
             IVariable variable,
-            out IExpression value)
+            out Expression value)
         {
             if (context.TryGetValue(variable, out var pair))
             {
@@ -44,13 +44,22 @@ namespace xtofs.dtt
             }
         }
 
-        public static IImmutableDictionary<IVariable, (IExpression type, IExpression value)> Extend(
-           this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
+        public static IImmutableDictionary<IVariable, (Expression type, Expression value)> Extend(
+           this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
            IVariable variable,
-           IExpression type,
-           IExpression value = null)
+           Expression type,
+           Expression value = null)
         {
             return context.SetItem(variable, (type, value));
+        }
+
+        public static IImmutableDictionary<IVariable, (Expression type, Expression value)> Define(
+           this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
+           IVariable variable,
+           Expression expression)
+        {
+            var type = context.InferType(expression);
+            return context.SetItem(variable, (type, expression));
         }
 
         /// <summary>
@@ -59,9 +68,9 @@ namespace xtofs.dtt
         /// <param name="context"></param>
         /// <param name="expression"></param>
         /// <returns>a type expression</returns>
-        public static IExpression InferType(
-               this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
-               IExpression expression)
+        public static Expression InferType(
+               this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
+               Expression expression)
         {
             switch (expression)
             {
@@ -106,8 +115,8 @@ namespace xtofs.dtt
         }
 
         public static int InferUniverse(
-              this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
-              IExpression expression)
+              this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
+              Expression expression)
         {
             var u = context.InferType(expression);
             switch (context.Normalize(u))
@@ -120,8 +129,8 @@ namespace xtofs.dtt
         }
 
         public static PiExpression InferPi(
-           this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
-           IExpression expression)
+           this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
+           Expression expression)
         {
             var u = context.InferType(expression);
             switch (context.Normalize(u))
@@ -134,10 +143,10 @@ namespace xtofs.dtt
         }
 
         public static bool Equal(
-           this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
-           IExpression a, IExpression b)
+           this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
+           Expression a, Expression b)
         {
-            bool Equal(IExpression a, IExpression b)
+            bool Equal(Expression a, Expression b)
             {
                 switch ((a, b))
                 {
@@ -169,9 +178,9 @@ namespace xtofs.dtt
         /// </summary>
         /// <param name="IImmutableDictionary<VariableExpression, (IExpression type, IExpression value)"></param>
         /// <returns></returns>
-        public static IExpression Normalize(
-            this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context,
-            IExpression expression)
+        public static Expression Normalize(
+            this IImmutableDictionary<IVariable, (Expression type, Expression value)> context,
+            Expression expression)
         {
             switch (expression)
             {
@@ -217,18 +226,18 @@ namespace xtofs.dtt
             }
         }
 
-        public static string Format(this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context, string sep = "; ")
+        public static string Format(this IImmutableDictionary<IVariable, (Expression type, Expression value)> context, string sep = "; ")
         {
             return string.Join(sep, from triple in context select Format(triple));
         }
 
-        private static string Format(KeyValuePair<IVariable, (IExpression type, IExpression value)> triple)
+        private static string Format(KeyValuePair<IVariable, (Expression type, Expression value)> triple)
         {
             var (key, (type, value)) = triple;
             return $"{key}: {type}{(value == null ? "" : $" = {value}")}";
         }
 
-        public static IExpression Eval(this IImmutableDictionary<IVariable, (IExpression type, IExpression value)> context, IExpression expr)
+        public static Expression Eval(this IImmutableDictionary<IVariable, (Expression type, Expression value)> context, Expression expr)
         {
             return context.Normalize(expr);
         }
