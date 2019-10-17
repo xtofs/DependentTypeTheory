@@ -60,5 +60,14 @@ namespace xtofs.dtt.tests
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void Test3()
+        {
+            var a = Expression.Lambda(Variable.Var("x"), Expression.Var("N"), Expression.Var("x"));
+            var b = Expression.Lambda(Variable.Var("y"), Expression.Var("N"), Expression.Var("x"));
+
+            Assert.NotEqual(a, b);
+        }
     }
 }
