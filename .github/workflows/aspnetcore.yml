@@ -3,7 +3,7 @@ name: ASP.NET Core CI
 on: [push]
 
 jobs:
-  build:
+  build_and_test:
 
     runs-on: ubuntu-latest
     
@@ -16,4 +16,4 @@ jobs:
     - name: Test with dotnet
       run: dotnet test dtt.tests
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build dtt.sln --configuration Release
